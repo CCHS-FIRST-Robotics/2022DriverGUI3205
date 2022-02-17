@@ -19,6 +19,7 @@ import PyNetInformation
 
 
 timer_running = True
+program_started = False
 
 class Window:
     def __init__(self, name):
@@ -33,12 +34,12 @@ class Window:
         self.button_panel.button_box.grid(row=1, column=0, columnspan=6)
         self.map_panel.map_box.grid(row=1, column=0, rowspan=3, columnspan=6)
         self.info_panel.text_box.grid(row=4, column=0, columnspan=6)
-        self.display.mainloop()
 
     def start_interface(self):
         self.initialize_update_timer()
 
     def update_interface(self):
+        self.display.update_idletasks()
         self.display.update()
 
     def initialize_update_timer(self):
@@ -46,8 +47,9 @@ class Window:
         update_timer.start()
 
     def update_graphics(self):
-        self.map_panel.update_robo_pos(self.network_table)
-        self.info_panel.update_robo_info(self.network_table)
-        self.update_interface()
+        if program_started:
+            self.map_panel.update_robo_pos(self.network_table)
+            self.info_panel.update_robo_info(self.network_table)
+            self.update_interface()
         if timer_running:
             self.initialize_update_timer()

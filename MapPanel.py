@@ -3,6 +3,9 @@ from tkinter.font import Font
 import frc.robot.network as netwk
 import math
 
+mouse_enabled = False
+COORD_SCALE = 3 # in cm
+PIXEL_SCALE = 1.176
 
 class Window:
     def __init__(self, root):
@@ -11,6 +14,7 @@ class Window:
         self.map_box.create_image(0, 0, image=field_map, anchor="nw")
         self.old_heading = 0
         self.starting_pos = [0, 0]
+        self.map_box.bind('<Button-1>', self.map_clicked)
 
     def update_robo_pos(self, netwk):
         self.map_box.delete("all")
@@ -22,6 +26,8 @@ class Window:
         self.map_panel.map_box.create_image(0, 0, image=field_map, anchor="nw")
         self.rec_points = create_rectangle_points(self.robo_pos[0], self.robo_pos[1], self.robo_heading)
         self.map_box.create_polygon(self.rec_points, fill="grey", outline="black")
+        self.map_box.update_idletasks()()
+        self.map_box.update()
 
     def update_robo_start(self, start_pos):
         self.starting_pos = start_pos
@@ -31,12 +37,18 @@ class Window:
         # reset network table and robot Coordinates
         # reset hardware, off on, and clear value slate
 
+    def map_clicked(self, event):
+        if mouse_enabled:
+            pass
+
 def create_rectangle_points(x_pos, y_pos, heading):
+    ROBO_SMALL_SIDE = 30 # SEE MATH PAGE IN NOTEBOOK, NUMBERS ARE IN PIXELS, /2 of total length
+    ROBO_LARGE_SIDE = 35
     angles = []
     points = []
-    radius = math.sqrt(70^2 + 60^2) # SEE MATH PAGE IN NOTEBOOK, NUMBERS ARE IN PIXELS, MAKE VARIABLE NAMES
-    major_angle = math.atan(21/25)
-    minor_angle = math.atan(25/21)
+    radius = math.sqrt(ROBO_LARGE_SIDE^2 + ROBO_SMALL_SIDE^2)
+    major_angle = math.atan(ROBO_SMALL_SIDE/ROBO_LARGE_SIDE)
+    minor_angle = math.atan(ROBO_LARGE_SIDE/ROBO_SMALL_SIDE)
     angles.append((heading + major_angle) % (math.pi * 2))
     angles.append((heading + major_angle + 2 * minor_angle) % (math.pi * 2))
     angles.append((heading + 3 * major_angle + 2 * minor_angle) % (math.pi * 2))
@@ -44,8 +56,8 @@ def create_rectangle_points(x_pos, y_pos, heading):
     for angle in angles:
         y_add = math.sin(angle) * radius
         x_add = math.cos(angle) * radius
-        point_ycor = y_pos - y_add
-        point_xcor = x_pos + x_add
+        point_ycor = (y_pos * COORD_SCALE) / PIXEL_SCALE - y_add
+        point_xcor = (x_pos * COORD_SCALE) / PIXEL_SCALE + x_add
         points.extend([point_xcor, point_ycor])
 
     return points
