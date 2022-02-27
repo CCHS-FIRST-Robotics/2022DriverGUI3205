@@ -5,7 +5,8 @@ import math
 
 mouse_enabled = False
 COORD_SCALE = 3 # in cm
-PIXEL_SCALE = 1.176
+PIXEL_SCALE = 1.176 # cm
+starting_pos = [0, 0]
 
 class Window:
     def __init__(self, root):
@@ -13,7 +14,7 @@ class Window:
         field_map = tk.PhotoImage(file='Field Map.gif')
         self.map_box.create_image(0, 0, image=field_map, anchor="nw")
         self.old_heading = 0
-        self.starting_pos = [0, 0]
+        starting_pos = [0, 0]
         self.map_box.bind('<Button-1>', self.map_clicked)
 
     def update_robo_pos(self, netwk):
@@ -30,7 +31,7 @@ class Window:
         self.map_box.update()
 
     def update_robo_start(self, start_pos):
-        self.starting_pos = start_pos
+        starting_pos = start_pos
 
     def restart(self, start_pos):
         self.update_robo_start(start_pos)
@@ -39,9 +40,17 @@ class Window:
 
     def map_clicked(self, event):
         if mouse_enabled:
-            pass
+            mouse_x = event.x
+            mouse_y = event.y
+            new_x = ((starting_pos[0] - mouse_x) * PIXEL_SCALE) / COORD_SCALE
+            new_y = (-(starting_pos[1] - mouse_y) * PIXEL_SCALE) / COORD_SCALE
+            #send coords 
 
-def create_rectangle_points(x_pos, y_pos, heading):
+
+
+def create_rectangle_points(robo_x, robo_y, heading):
+    x_pos = starting_pos[0] + robo_x
+    y_pos = starting_pos[1] + robo_y
     ROBO_SMALL_SIDE = 30 # SEE MATH PAGE IN NOTEBOOK, NUMBERS ARE IN PIXELS, /2 of total length
     ROBO_LARGE_SIDE = 35
     angles = []
