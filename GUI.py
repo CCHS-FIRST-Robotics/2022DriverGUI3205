@@ -31,19 +31,23 @@ class Window:
         self.button_panel = ButtonPanel.Window(self.display)
         self.info_panel = InfoPanel.Window(self.display)
         self.map_panel = MapPanel.Window(self.display)
-        self.button_panel.button_box.grid(row=1, column=0, columnspan=6)
+        self.button_panel.button_box.grid(row=0, column=0, columnspan=6)
         self.map_panel.map_box.grid(row=1, column=0, rowspan=3, columnspan=6)
         self.info_panel.text_box.grid(row=4, column=0, columnspan=6)
+        self.display.mainloop()
 
     def start_interface(self):
         self.initialize_update_timer()
+
+    def end_interface(self):
+        pass
 
     def update_interface(self):
         self.display.update_idletasks()
         self.display.update()
 
     def initialize_update_timer(self):
-        update_timer = th.Timer(0.001, self.update_info)
+        update_timer = th.Timer(0.001, self.update_graphics())
         update_timer.start()
 
     def update_graphics(self):

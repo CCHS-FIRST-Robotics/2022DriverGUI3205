@@ -13,8 +13,7 @@ import GUI
 
 
 def main():
-    robot_visual = GUI.Window("Field Map Cisualization")
-    robot_visual.start_interface()
+    robot_visual = GUI.Window("Field Map Visualization")
 
 
 main()

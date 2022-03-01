@@ -1,10 +1,9 @@
 import tkinter as tk
 from tkinter.font import Font
-import frc.robot.network as netwk
 import math
 
 mouse_enabled = False
-COORD_SCALE = 3 # in cm
+COORD_SCALE = 100   # in cm
 PIXEL_SCALE = 1.176 # cm
 starting_pos = [0, 0]
 
@@ -44,7 +43,7 @@ class Window:
             mouse_y = event.y
             new_x = ((starting_pos[0] - mouse_x) * PIXEL_SCALE) / COORD_SCALE
             new_y = (-(starting_pos[1] - mouse_y) * PIXEL_SCALE) / COORD_SCALE
-            #send coords 
+            #send coords
 
 
 
@@ -58,6 +57,7 @@ def create_rectangle_points(robo_x, robo_y, heading):
     radius = math.sqrt(ROBO_LARGE_SIDE^2 + ROBO_SMALL_SIDE^2)
     major_angle = math.atan(ROBO_SMALL_SIDE/ROBO_LARGE_SIDE)
     minor_angle = math.atan(ROBO_LARGE_SIDE/ROBO_SMALL_SIDE)
+    # NEED TO RECHECK MATH, RANGE IS FROM -pi to pi
     angles.append((heading + major_angle) % (math.pi * 2))
     angles.append((heading + major_angle + 2 * minor_angle) % (math.pi * 2))
     angles.append((heading + 3 * major_angle + 2 * minor_angle) % (math.pi * 2))
